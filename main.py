@@ -4,7 +4,6 @@ from player import *
 from pyglet.sprite import Sprite
 from random import randint
 import time
-
  
 class game(pig.window.Window):
     def __init__(self, *args,**kwargs):
@@ -17,13 +16,11 @@ class game(pig.window.Window):
         self.attack = load_files('attack.gif')
         self.melee = load_files('melee.gif')
         self.bullet = load_files('bullet.png')
-        self.enemy = Sprite(load_files('run.gif'))
+        self.enemy = load_files('run.gif')
         self.player = object((self.height/2),(self.width/2),Sprite(self.move))
         self.player_x = self.player.x_position
         self.player_y = self.player.y_postion
-        self.enemy.image.anchor_x = 64/2
-        self.enemy.image.anchor_y = 64/2
-        self.enemy.rotation = 180.0
+
 
         
         self.bullet_list = []
@@ -32,7 +29,7 @@ class game(pig.window.Window):
         for i in range(4):
             self.map_List.append(object(0,i*960, Sprite(self.bg)))
         for tile in self.map_List:
-            tile.acceration = -200
+            tile.acceration = -100
     
     def on_key_press(self,symbol, modifiers):
 
@@ -70,31 +67,33 @@ class game(pig.window.Window):
             enemy.draw()
             self.y_pos = enemy.y_postion
             print(self.y_pos)
-
-
         for bullet in self.bullet_list:
             bullet.draw()
             self.y_pos = bullet.y_postion
             print(self.y_pos)
 
     def make_enemy(self):
-        selector = randint(0,10)
+        selector = randint(0,20)
         if selector == 1:
-            self.enemy_list.append(object(randint(100,500),1000,self.enemy))      
+            self.enemy_list.append(object(randint(150,450),1000,Sprite(self.enemy)))      
        
     def bullet_update(self,dt):
         for bullet in self.bullet_list:
             bullet.update(dt)
             bullet.acceration = 300
+            
             if bullet.y_postion > 1000:
                 self.bullet_list.remove(bullet)
+            
                 
     def enemy_update(self,dt):
         for enemy in self.enemy_list:
             enemy.update(dt)
-            enemy.acceration = -400
-            if enemy.y_postion <-1000:
-                self.enemy_list.remove(enemy)                    
+            enemy.acceration = -300
+            if enemy.y_postion < -1000:
+                self.enemy_list.remove(enemy)
+        if(len(self.enemy_list)<10):
+            self.make_enemy()                    
     def map_update(self,dt):
         for tile in self.map_List:
             tile.update(dt)
@@ -105,14 +104,12 @@ class game(pig.window.Window):
     def update(self,dt):
         #print('X-position:',self.player.x_position,'Y-position',self.player.y_postion)
         print(self.enemy_list)
-  
-        
         self.player.update(dt)
         self.map_update(dt)
-        self.bullet_update(dt)
         self.enemy_update(dt)
-        if(len(self.enemy_list)<10):
-            self.make_enemy()
+        self.bullet_update(dt)
+
+
         
         
 
