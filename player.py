@@ -3,9 +3,9 @@ import pyglet as pig
 from random import randint
 def load_files(sprite_img):
     if (sprite_img[-3:]=='gif'):
-       return pig.image.load_animation(sprite_img)
+       return pig.image.load_animation('media/'+sprite_img)
     else:
-        return pig.image.load(sprite_img)
+        return pig.image.load('media/'+sprite_img)
 class object():
     def __init__(self, x_position, y_position,sprite= None):
         self.x_position = x_position
